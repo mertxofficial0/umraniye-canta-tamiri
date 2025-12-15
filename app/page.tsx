@@ -443,18 +443,23 @@ useEffect(() => {
 
               {reviews.slice(page * 3, page * 3 + 3).map((review, i) => (
                 <div
-                  key={i}
-                  className="
-                    bg-white
-                    rounded-[28px]
-                    px-10 py-10
-                    shadow-[0_18px_40px_rgba(0,0,0,0.16)]
-                    hover:-translate-y-1
-                    hover:shadow-[0_28px_65px_rgba(0,0,0,0.22)]
-                    transition-all
-                    duration-300
-                  "
-                >
+  key={i}
+  className="
+    bg-white
+    rounded-[28px]
+    px-7 py-7
+    shadow-[0_18px_40px_rgba(0,0,0,0.16)]
+    hover:-translate-y-1
+    hover:shadow-[0_28px_65px_rgba(0,0,0,0.22)]
+    transition-all
+    duration-300
+
+    min-h-[160px] md:min-h-[180px]
+    flex flex-col justify-between
+  "
+>
+
+
                   {/* HEADER */}
                   <div className="flex items-center gap-3 mb-2">
                     <img
@@ -511,7 +516,7 @@ useEffect(() => {
         rounded-[32px]
         shadow-[0_30px_70px_rgba(0,0,0,0.18)]
         px-10
-        py-14
+        py-10
         transition-all
         duration-500
         hover:shadow-[0_40px_90px_rgba(0,0,0,0.25)]

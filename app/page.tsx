@@ -115,60 +115,89 @@ useEffect(() => {
   return (
     <main className="min-h-screen text-slate-900 bg-gradient-to-br from-slate-50 via-white to-slate-100">
 
-      {/* HEADER */}
-      <header
-        className={`
-          fixed top-0 left-0 w-full z-50
-          bg-white/70 backdrop-blur-xl
-          transition-all duration-300
-          ${menuOpen ? 'blur-sm opacity-70 pointer-events-none' : ''}
-        `}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+{/* BLUR WRAPPER */}
+  <div className={`transition-all duration-300 ${menuOpen ? 'blur-md scale-[0.98]' : ''}`}></div>
+      {/* MODERN FLOATING HEADER */}
+<header
+  className={`
+    fixed top-4 left-1/2 -translate-x-1/2
+    w-[95%] max-w-7xl z-50
+    bg-white/70 backdrop-blur-2xl
+    rounded-2xl
+    shadow-[0_10px_40px_rgba(0,0,0,0.12)]
+    ${menuOpen ? 'blur-md opacity-70' : ''}
+  `}
+>
 
-          {/* LOGO */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-700 flex items-center justify-center shadow-md">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
-                <path d="M4 8h16l-1.5 11h-13L4 8z" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M8 8V6a4 4 0 018 0v2" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-            </div>
-            <span className="font-medium text-[17px] tracking-wide text-slate-800">
-              Ümraniye Çanta Tamiri
-            </span>
-          </div>
 
-          {/* DESKTOP MENU */}
-          <nav className="hidden md:flex gap-10 text-sm font-medium">
-            {[
-              ['Ana Sayfa', '#anasayfa'],
-              ['Hakkımızda', '#hakkimizda'],
-              ['Hizmetler', '#hizmetler'],
-              ['Galeri', '#galeri'],
-              ['İletişim', '#iletisim'],
-            ].map(([label, href]) => (
-              <a
-                key={label}
-                href={href}
-                className="relative text-slate-600 hover:text-slate-900 transition
-                after:absolute after:left-1/2 after:-bottom-1 after:h-[2px] after:w-0
-                after:bg-slate-900 after:transition-all hover:after:w-full hover:after:left-0"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
+  <div className="px-6 py-4 flex items-center justify-between">
 
-          {/* MOBILE BUTTON */}
-          <button
-            className="md:hidden w-10 h-10 rounded-xl bg-white/70 backdrop-blur shadow flex items-center justify-center"
-            onClick={() => setMenuOpen(true)}
-          >
-            ☰
-          </button>
-        </div>
-      </header>
+    {/* LOGO */}
+    <div className="flex items-center gap-3">
+      <div className="
+        w-11 h-11 rounded-xl
+        bg-gradient-to-br from-slate-900 to-slate-700
+        flex items-center justify-center
+        shadow-lg
+      ">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
+          <path d="M4 8h16l-1.5 11h-13L4 8z" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M8 8V6a4 4 0 018 0v2" stroke="currentColor" strokeWidth="1.5" />
+        </svg>
+      </div>
+
+      <span className="font-semibold tracking-wide text-slate-900 text-lg">
+        Ümraniye Çanta Tamiri
+      </span>
+    </div>
+
+    {/* DESKTOP MENU */}
+    <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+      {[
+        ['Ana Sayfa', '#anasayfa'],
+        ['Hakkımızda', '#hakkimizda'],
+        ['Hizmetler', '#hizmetler'],
+        ['Galeri', '#galeri'],
+        ['İletişim', '#iletisim'],
+      ].map(([label, href]) => (
+        <a
+          key={label}
+          href={href}
+          className="
+            relative text-slate-600
+            hover:text-slate-900
+            transition
+            after:absolute after:left-0 after:-bottom-1
+            after:h-[2px] after:w-0
+            after:bg-slate-900
+            after:transition-all
+            hover:after:w-full
+          "
+        >
+          {label}
+        </a>
+      ))}
+    </nav>
+
+    {/* MOBILE BUTTON */}
+    <button
+      onClick={() => setMenuOpen(true)}
+      className="
+        md:hidden
+        w-11 h-11
+        rounded-xl
+        bg-slate-900 text-white
+        flex items-center justify-center
+        shadow-lg
+        hover:scale-105
+        transition
+      "
+    >
+      ☰
+    </button>
+  </div>
+</header>
+
 
       {/* OVERLAY */}
       {menuOpen && (
@@ -178,47 +207,105 @@ useEffect(() => {
         />
       )}
 
-      {/* MOBILE MENU */}
-      <div
-        className={`
-          fixed top-0 right-0 h-full w-72 z-50
-          bg-white/90 backdrop-blur-xl
-          transform transition-transform duration-300
-          ${menuOpen ? 'translate-x-0' : 'translate-x-full'}
-        `}
-      >
-        <div className="p-6 flex flex-col h-full">
-          <div className="flex items-center justify-between mb-10">
-            <span className="font-semibold text-lg">Menü</span>
-            <button className="text-2xl" onClick={() => setMenuOpen(false)}>
-              ✕
-            </button>
-          </div>
+      {/* MODERN MOBILE MENU */}
+<div
+  className={`
+    fixed inset-0 z-50
+    flex justify-end
+    transition-all duration-500
+    ${menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+  `}
+>
+  {/* PANEL */}
+  <div
+    className={`
+      h-full w-[85%] max-w-sm
+      bg-white/80 backdrop-blur-2xl
+      shadow-[-20px_0_60px_rgba(0,0,0,0.25)]
+      rounded-l-3xl
+      p-6
+      flex flex-col
+      transform transition-transform duration-500
+      ${menuOpen ? 'translate-x-0' : 'translate-x-full'}
+    `}
+  >
 
-          <nav className="flex flex-col gap-4">
-            {[
-              ['Ana Sayfa', '#anasayfa'],
-              ['Hakkımızda', '#hakkimizda'],
-              ['Hizmetler', '#hizmetler'],
-              ['Galeri', '#galeri'],
-              ['İletişim', '#iletisim'],
-            ].map(([label, href]) => (
-              <a
-                key={label}
-                href={href}
-                onClick={() => setMenuOpen(false)}
-                className="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-900 hover:text-white transition"
-              >
-                {label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="mt-auto text-sm text-slate-400">
-            © Ümraniye Çanta Tamiri
-          </div>
+    {/* TOP BAR */}
+    <div className="flex items-center justify-between mb-10">
+      <div className="flex items-center gap-3">
+        <div className="
+          w-10 h-10 rounded-xl
+          bg-gradient-to-br from-slate-900 to-slate-700
+          flex items-center justify-center
+          shadow-md
+        ">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
+            <path d="M4 8h16l-1.5 11h-13L4 8z" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M8 8V6a4 4 0 018 0v2" stroke="currentColor" strokeWidth="1.5" />
+          </svg>
         </div>
+
+        <span className="font-semibold text-slate-900">
+          Menü
+        </span>
       </div>
+
+      <button
+        onClick={() => setMenuOpen(false)}
+        className="
+          w-10 h-10 rounded-xl
+          bg-slate-900 text-white
+          flex items-center justify-center
+          hover:scale-105
+          transition
+        "
+      >
+        ✕
+      </button>
+    </div>
+
+    {/* LINKS */}
+    <nav className="flex flex-col gap-3">
+      {[
+        ['Ana Sayfa', '#anasayfa'],
+        ['Hakkımızda', '#hakkimizda'],
+        ['Hizmetler', '#hizmetler'],
+        ['Galeri', '#galeri'],
+        ['İletişim', '#iletisim'],
+      ].map(([label, href], i) => (
+        <a
+          key={label}
+          href={href}
+          onClick={() => setMenuOpen(false)}
+          className="
+            group
+            flex items-center justify-between
+            px-5 py-4
+            rounded-2xl
+            bg-white/70
+            backdrop-blur
+            shadow-[0_10px_30px_rgba(0,0,0,0.12)]
+            hover:bg-slate-900
+            hover:text-white
+            transition-all
+            duration-300
+          "
+        >
+          <span className="font-medium">{label}</span>
+          <span className="opacity-0 group-hover:opacity-100 transition">
+            →
+          </span>
+        </a>
+      ))}
+    </nav>
+
+    {/* FOOTER */}
+    <div className="mt-auto pt-8 text-sm text-slate-400">
+      © Ümraniye Çanta Tamiri
+    </div>
+  </div>
+</div>
+
 
       {/* HERO */}
       <section id="anasayfa" className="pt-28 md:pt-32 pb-32">

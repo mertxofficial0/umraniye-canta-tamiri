@@ -53,3 +53,20 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+/* === HIDE SCROLLBAR (BUT KEEP SCROLL) === */
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* IE / Edge legacy */
+body {
+  -ms-overflow-style: none;
+}

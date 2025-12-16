@@ -520,7 +520,7 @@ useEffect(() => {
 </section>
 
 {/* SOCIAL MEDIA */}
-<section id="sosyal" className="pt-10 pb-24 md:pt-0 md:pb-32 fade-section">
+<section id="sosyal" className="pt-20 pb-24 md:pt-0 md:pb-32 fade-section">
 
   <div className="max-w-7xl mx-auto px-6">
 
@@ -1163,7 +1163,11 @@ useEffect(() => {
 
 
 
-      <footer className="relative mt-24 bg-transparent">
+      <footer
+  id="iletisim"
+  className="relative mt-24 bg-transparent scroll-mt-32"
+>
+
 
   
 

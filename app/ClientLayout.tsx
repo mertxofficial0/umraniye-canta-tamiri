@@ -223,15 +223,38 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
           <div className="flex justify-between items-center mb-6">
             <span className="font-semibold">Menü</span>
-            <button onClick={() => setMenuOpen(false)}>✕</button>
+            <button
+  onClick={() => setMenuOpen(false)}
+  className="
+    w-10 h-10
+    rounded-xl
+    bg-slate-900
+    text-white
+    flex items-center justify-center
+    text-lg
+    hover:scale-105
+    transition
+  "
+>
+  ✕
+</button>
+
           </div>
 
-          <nav className="flex flex-col gap-3">
+          <nav className="flex flex-col gap-3 text-slate-900">
+
             {['Ana Sayfa','#anasayfa','Hakkımızda','#hakkimizda','Hizmetler','#hizmetler','Galeri','#galeri','İletişim','#iletisim']
               .reduce((a,_,i,arr)=> i%2?a:a.concat([[arr[i],arr[i+1]]]),[] as any[])
               .map(([label,href])=>(
               <a key={label} href={href} onClick={()=>setMenuOpen(false)}
-                className="px-5 py-4 rounded-2xl bg-white shadow">
+                className="
+  px-5 py-4
+  rounded-2xl
+  bg-white
+  shadow
+  text-slate-900
+"
+>
                 {label}
               </a>
             ))}

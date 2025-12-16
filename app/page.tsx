@@ -259,8 +259,7 @@ useEffect(() => {
 
 
   return (
-    <main className="min-h-screen text-slate-900 bg-gradient-to-br from-slate-50 via-white to-slate-100">
-
+    <main className="min-h-screen page-enter text-slate-900 bg-gradient-to-br from-slate-50 via-white to-slate-100">
 
 
 
@@ -1164,11 +1163,7 @@ useEffect(() => {
 
 
 
-      <footer
-  id="iletisim"
-  className="relative mt-24 bg-transparent"
->
-
+      <footer className="relative mt-24 bg-transparent">
 
   
 

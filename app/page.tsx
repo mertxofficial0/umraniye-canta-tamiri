@@ -530,7 +530,7 @@ useEffect(() => {
         Sosyal Medya
       </h2>
       <p className="text-slate-600 text-sm">
-        Bize sosyal medya hesaplarımızdan ulaşın.
+        Bize sosyal medya hesaplarımızdan ulaşın
       </p>
       
     </div>
@@ -734,7 +734,7 @@ useEffect(() => {
         Hakkımızda
       </h2>
       <p className="text-slate-600 text-sm">
-        Tecrübemiz ve ustalığımızla çantalarınıza yeniden hayat veriyoruz
+        Tecrübemiz ve ustalığımıza güveniyoruz
       </p>
     </div>
 

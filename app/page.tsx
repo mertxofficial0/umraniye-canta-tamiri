@@ -526,7 +526,12 @@ useEffect(() => {
 
     {/* TITLE – GLASS DIŞINDA */}
     <div className="text-center mb-5">
-      
+      <h2 className="text-3xl md:text-4xl font-semibold text-slate-900 mb-1">
+        Sosyal Medya
+      </h2>
+      <p className="text-slate-600 text-sm">
+        Bize sosyal medya hesaplarımızdan ulaşın.
+      </p>
       
     </div>
 

@@ -38,16 +38,19 @@ const reviews = [
 
 
 const galleryItems = [
-  'Cx6GXoCMBd5',
-  'CyLxui2suxH',
-  'CyGv6KBM0KB',
-  'DM95euaMlLc',
-  'DM72cDFMjpr',
-  'DKHHFDAMRXY',
+  { type: "image", src: "/gallery/dukkan-1.jpg" },
+  { type: "image", src: "/gallery/valiz-1.jpg" },
+  { type: "image", src: "/gallery/tamir-1.jpg" },
+  { type: "video", src: "/gallery/video-1.mp4" },
+  { type: "image", src: "/gallery/dukkan-2.jpg" },
+  { type: "video", src: "/gallery/video-2.mp4" },
 ];
+
 
 export default function Home() {
   const [reviewPage, setReviewPage] = useState(0);
+const [showHeader, setShowHeader] = useState(true);
+const lastScrollY = useRef(0);
 
 useEffect(() => {
   const interval = setInterval(() => {
@@ -62,10 +65,6 @@ useEffect(() => {
 
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : 'auto';
-  }, [menuOpen]);
-// FADE-IN ON SCROLL
-useEffect(() => {
   const sections = document.querySelectorAll('.fade-section');
 
   const observer = new IntersectionObserver(
@@ -78,15 +77,26 @@ useEffect(() => {
       });
     },
     {
-      threshold: 0.3,
-      rootMargin: '0px 0px -80px 0px',
+      threshold: 0,
+      rootMargin: '0px 0px -10% 0px',
     }
   );
 
   sections.forEach(section => observer.observe(section));
 
+  // 🔥 MOBİL FAILSAFE
+  requestAnimationFrame(() => {
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top < window.innerHeight) {
+        section.classList.add('is-visible');
+      }
+    });
+  });
+
   return () => observer.disconnect();
 }, []);
+
 useEffect(() => {
   const slider = sliderRef.current;
   if (!slider) return;
@@ -108,6 +118,25 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, []);
 
+useEffect(() => {
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+      // aşağı iniyor
+      setShowHeader(false);
+    } else {
+      // yukarı çıkıyor
+      setShowHeader(true);
+    }
+
+    lastScrollY.current = currentScrollY;
+  };
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
 
 
 
@@ -125,9 +154,16 @@ useEffect(() => {
     bg-white/70 backdrop-blur-2xl
     rounded-2xl
     shadow-[0_10px_40px_rgba(0,0,0,0.12)]
+    transition-all duration-500 ease-in-out
+    ${
+      showHeader
+        ? "translate-y-0 opacity-100"
+        : "-translate-y-[120%] opacity-0"
+    }
     ${menuOpen ? 'blur-md opacity-70' : ''}
   `}
 >
+
 
 
   <div className="px-6 py-4 flex items-center justify-between">
@@ -367,136 +403,146 @@ useEffect(() => {
 
 
       {/* ABOUT */}
-      <section id="hakkimizda" className="py-32 fade-section">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-white/60 backdrop-blur-xl rounded-[32px] shadow-2xl px-10 py-14 text-center">
-            <h2 className="text-4xl font-semibold mb-6 text-slate-900">Hakkımızda</h2>
-            <p className="text-slate-600 text-lg leading-relaxed max-w-4xl mx-auto">
-              Ümraniye Çanta Tamiri olarak, yılların verdiği tecrübe ve ustalıkla
-              çanta, valiz ve deri ürünlerinizi ilk günkü görünümüne kavuşturmayı
-              hedefliyoruz. Geleneksel el işçiliğini modern tamir teknikleriyle
-              birleştirerek güvenilir ve kaliteli hizmet sunuyoruz.
-            </p>
-          </div>
-        </div>
-      </section>
+<section id="hakkimizda" className="py-32 fade-section">
+  <div className="max-w-7xl mx-auto px-6">
+
+    {/* TITLE – GLASS DIŞINDA */}
+    <div className="text-center mb-5">
+      <h2 className="text-4xl font-semibold text-slate-900 mb-1">
+        Hakkımızda
+      </h2>
+      <p className="text-slate-600 text-lg">
+        Tecrübemiz ve ustalığımızla çantalarınıza yeniden hayat veriyoruz
+      </p>
+    </div>
+
+    {/* CONTENT – GLASS CARD */}
+    <div
+      className="
+        bg-white/60
+        backdrop-blur-xl
+        rounded-[32px]
+        shadow-2xl
+        px-10 py-14
+        text-center
+      "
+    >
+      <p className="text-slate-700 text-lg leading-relaxed max-w-4xl mx-auto">
+        Ümraniye Çanta Tamiri olarak yılların verdiği tecrübe ve ustalıkla
+        çanta, valiz ve deri ürünlerinizi ilk günkü görünümüne kavuşturuyoruz.
+        Geleneksel el işçiliğini modern tamir teknikleriyle birleştirerek
+        kaliteli, güvenilir ve uzun ömürlü çözümler sunuyoruz.
+      </p>
+    </div>
+
+  </div>
+</section>
+
       
 {/* REVIEWS */}
 <section className="py-32 fade-section">
   <div className="max-w-7xl mx-auto px-6">
 
-    {/* OUTER CARD */}
-    <div className="bg-white rounded-[48px] px-6 md:px-12 py-14 shadow-[0_40px_100px_rgba(0,0,0,0.15)]">
-
-      {/* TITLE + BADGE */}
-      <div className="text-center mb-14 flex flex-col items-center gap-4">
-        <h2 className="text-4xl font-semibold text-slate-900">
-          Google Yorumları
-        </h2>
-
-        {/* GOOGLE BADGE */}
-        <div className="
-          inline-flex items-center gap-2
-          px-4 py-1.5
-          rounded-full
-          bg-white
-          shadow-[0_6px_20px_rgba(0,0,0,0.15)]
-        ">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-
-          <div className="flex gap-0.5 text-yellow-400 text-xs">
-            {Array.from({ length: 5 }).map((_, starIndex) => (
-  <span key={`star-${starIndex}`}>★</span>
-))}
-
-          </div>
-
-          <span className="text-xs font-semibold text-slate-700">4.7</span>
-          <span className="text-xs text-slate-400">Google’dan</span>
-        </div>
-      </div>
-
-      {/* GLASS CONTAINER (HER ZAMAN YORUMLARIN ALTINDA) */}
-      <div className="
-        bg-white/70
-        backdrop-blur-xl
-        rounded-[36px]
-        p-4 md:p-8
-        shadow-[0_25px_60px_rgba(0,0,0,0.15)]
-      ">
-
-        {/* FADE WRAPPER */}
-        <div className="relative">
-
-  {[0, 1].map(page => (
-    <div
-      key={page}
-      className={`
-        grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8
-
-        transition-all duration-700 ease-in-out
-        ${reviewPage === page
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-6 absolute inset-0 pointer-events-none"}
-      `}
-    >
-
-              {reviews.slice(page * 3, page * 3 + 3).map((review, i) => (
-                <div
-  key={i}
-  className="
-    bg-white
-    rounded-[28px]
-    px-7 py-7
-    shadow-[0_18px_40px_rgba(0,0,0,0.16)]
-    hover:-translate-y-1
-    hover:shadow-[0_28px_65px_rgba(0,0,0,0.22)]
-    transition-all
-    duration-300
-
-    min-h-[160px] md:min-h-[180px]
-    flex flex-col justify-between
-  "
->
-
-
-                  {/* HEADER */}
-                  <div className="flex items-center gap-3 mb-2">
-                    <img
-                      src={review.avatar}
-                      alt={review.name}
-                      className="w-8 h-8 rounded-full"
-                    />
-
-                    <div className="flex flex-col">
-                      <span className="text-sm font-semibold text-slate-900 leading-none">
-                        {review.name}
-                      </span>
-
-                      <div className="flex gap-0.5 text-yellow-400 text-xs mt-1">
-                        {Array.from({ length: 5 }).map((_, starIndex) => (
-  <span key={`star-${starIndex}`}>★</span>
-))}
-
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* COMMENT */}
-                  <p className="text-slate-700 text-sm leading-snug">
-                    “{review.text}”
-                  </p>
-                </div>
-              ))}
-            </div>
-          ))}
-
-        </div>
-      </div>
-
+    {/* TITLE – GLASS DIŞINDA */}
+    <div className="text-center mb-5">
+      <h2 className="text-4xl font-semibold text-slate-900 mb-1">
+        Google Yorumları
+      </h2>
+      <p className="text-slate-600 text-lg">
+        Müşterilerimizin bizim hakkımızdaki görüşleri
+      </p>
     </div>
+
+    {/* GLASS CARD – BADGE + YORUMLAR */}
+    <div
+      className="
+        bg-white/60
+        backdrop-blur-xl
+        rounded-[32px]
+        shadow-2xl
+        px-6 md:px-10
+        py-8
+      "
+    >
+      {/* GOOGLE BADGE */}
+      <div className="flex justify-center mb-6">
+        <div
+          className="
+            inline-flex items-center gap-2
+            px-4 py-1.5
+            rounded-full
+            bg-white
+            shadow-[0_6px_20px_rgba(0,0,0,0.15)]
+            text-sm
+          "
+        >
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+          <span className="text-yellow-400">★★★★★</span>
+          <span className="font-semibold text-slate-700">4.7</span>
+          <span className="text-slate-400">Google’dan</span>
+        </div>
+      </div>
+
+      {/* REVIEWS GRID */}
+      <div className="relative">
+        {[0, 1].map(page => (
+          <div
+            key={page}
+            className={`
+              grid grid-cols-1 md:grid-cols-3 gap-6
+              transition-all duration-700 ease-in-out
+              ${
+                reviewPage === page
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-6 absolute inset-0 pointer-events-none"
+              }
+            `}
+          >
+            {reviews.slice(page * 3, page * 3 + 3).map((review, i) => (
+              <div
+                key={i}
+                className="
+                  bg-white
+                  rounded-3xl
+                  p-6
+                  shadow-[0_15px_40px_rgba(0,0,0,0.14)]
+                  hover:-translate-y-1
+                  hover:shadow-[0_25px_65px_rgba(0,0,0,0.22)]
+                  transition-all
+                  duration-300
+                "
+              >
+                {/* HEADER */}
+                <div className="flex items-center gap-3 mb-3">
+                  <img
+                    src={review.avatar}
+                    alt={review.name}
+                    className="w-9 h-9 rounded-full"
+                  />
+                  <div>
+                    <p className="text-sm font-semibold text-slate-900 leading-none">
+                      {review.name}
+                    </p>
+                    <div className="text-yellow-400 text-xs">★★★★★</div>
+                  </div>
+                </div>
+
+                {/* COMMENT */}
+                <p className="text-slate-700 text-sm leading-relaxed">
+                  “{review.text}”
+                </p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+
   </div>
 </section>
+
+
+
 
 
 
@@ -509,104 +555,82 @@ useEffect(() => {
 {/* LOCATION */}
 <section id="konum" className="py-32 fade-section">
   <div className="max-w-7xl mx-auto px-6">
+
+    {/* TITLE (GLASS DIŞINDA) */}
+    <div className="text-center mb-5">
+      <h2 className="text-4xl font-semibold text-slate-900 mb-1">
+        Konumumuz
+      </h2>
+      <p className="text-slate-600 text-lg">
+        Atölyemize kolayca ulaşabilirsiniz
+      </p>
+    </div>
+
+    {/* GLASS CARD – SADECE HARİTA + BAR */}
     <div
       className="
         bg-white/60
         backdrop-blur-xl
         rounded-[32px]
-        shadow-[0_30px_70px_rgba(0,0,0,0.18)]
-        px-10
-        py-10
-        transition-all
-        duration-500
-        hover:shadow-[0_40px_90px_rgba(0,0,0,0.25)]
+        shadow-2xl
+        overflow-hidden
       "
     >
-      {/* TITLE */}
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-semibold mb-4 text-slate-900">
-          Konumumuz
-        </h2>
-        <p className="text-slate-600 text-lg">
-          Atölyemize kolayca ulaşabilirsiniz
-        </p>
-      </div>
+      {/* MAP */}
+      <iframe
+        src="https://www.google.com/maps?q=Atatürk,+Morgül+Sk.+No:4,+34764+Ümraniye/İstanbul&output=embed"
+        className="w-full h-[460px] border-0"
+        loading="lazy"
+      />
 
-      {/* CONTENT */}
-      <div className="grid md:grid-cols-2 gap-12 items-center">
-        
-        {/* ADDRESS CARD */}
-        <div
-  className="
-    bg-white/90
-    backdrop-blur-2xl
-    rounded-3xl
-    p-8
-    border border-white/40
-    shadow-[0_25px_60px_rgba(0,0,0,0.18)]
-    hover:-translate-y-1
-    hover:shadow-[0_35px_80px_rgba(0,0,0,0.25)]
-    transition-all
-    duration-300
-  "
->
-
-          <h3 className="text-2xl font-semibold text-slate-900 mb-4">
+      {/* MAP INFO BAR */}
+      <div
+        className="
+          flex flex-col md:flex-row
+          items-center
+          justify-between
+          gap-4
+          px-8 py-5
+          bg-white/70
+          backdrop-blur-2xl
+        "
+      >
+        {/* ADDRESS */}
+        <div className="text-center md:text-left">
+          <h3 className="text-sm font-semibold text-slate-900 mb-0.5">
             📍 Ümraniye Çanta Tamiri
           </h3>
-
-          <p className="text-slate-700 leading-relaxed mb-6">
+          <p className="text-sm text-slate-600 leading-snug">
             Atatürk Mahallesi, Morgül Sk. No:4<br />
             34764 Ümraniye / İstanbul
           </p>
-
-          <a
-            href="https://www.google.com/maps/search/?api=1&query=Atatürk+Morgül+Sk.+No:4+Ümraniye+İstanbul"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-              inline-flex
-              items-center
-              gap-3
-              px-6
-              py-3
-              rounded-xl
-              bg-slate-900
-              text-white
-              hover:bg-slate-800
-              transition
-            "
-          >
-            Google Maps’te Aç
-          </a>
         </div>
 
-        {/* MAP */}
-        <div
-  className="
-    rounded-3xl
-    overflow-hidden
-    border border-white/40
-    shadow-[0_25px_60px_rgba(0,0,0,0.18)]
-    hover:-translate-y-1
-    hover:shadow-[0_35px_80px_rgba(0,0,0,0.25)]
-    transition-all
-    duration-300
-  "
->
-
-          <iframe
-            src="https://www.google.com/maps?q=Atatürk,+Morgül+Sk.+No:4,+34764+Ümraniye/İstanbul&output=embed"
-            className="w-full h-[420px] border-0"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </div>
-
+        {/* BUTTON */}
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=Atatürk+Morgül+Sk.+No:4+Ümraniye+İstanbul"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="
+            px-6 py-2.5
+            rounded-xl
+            bg-slate-900
+            text-white
+            text-sm
+            hover:bg-slate-800
+            transition
+            whitespace-nowrap
+          "
+        >
+          Haritalarda Gör
+        </a>
       </div>
     </div>
+
   </div>
 </section>
+
+
       {/* SERVICES */}
       <section id="hizmetler" className="py-32 fade-section">
 
@@ -657,41 +681,71 @@ useEffect(() => {
 
 
       {/* GALLERY */}
-      <section id="galeri" className="py-32">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-white/60 backdrop-blur-xl rounded-[32px] shadow-2xl px-10 py-14">
-            <div className="text-center mb-14">
-              <h2 className="text-4xl font-semibold mb-4 text-slate-900">Galerimiz</h2>
-              <p className="text-slate-600 text-lg">
-                Atölyemizden ve yaptığımız çalışmalardan kareler
-              </p>
-            </div>
+<section id="galeri" className="py-32 fade-section">
+  <div className="max-w-7xl mx-auto px-6">
 
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10">
-              {galleryItems.map((id, i) => (
-                <div
-  className="
-    rounded-3xl
-    overflow-hidden
-    bg-white
-    shadow-lg
-    relative
-  "
->
-  <iframe
-    src={`https://www.instagram.com/reel/${id}/embed`}
-    className="w-full h-[640px] border-0"
-    scrolling="no"
-    allow="autoplay; encrypted-media"
-    loading="lazy"
-  />
-</div>
+    {/* TITLE – GLASS DIŞINDA */}
+    <div className="text-center mb-6">
+      <h2 className="text-4xl font-semibold text-slate-900 mb-0.5">
+        Galerimiz
+      </h2>
+      <p className="text-slate-600 text-lg">
+        Atölyemizden ve yaptığımız çalışmalardan kareler
+      </p>
+    </div>
 
-              ))}
-            </div>
+    {/* CONTENT – GLASS CARD */}
+    <div
+      className="
+        bg-white/60
+        backdrop-blur-xl
+        rounded-[32px]
+        shadow-2xl
+        px-8 py-10
+      "
+    >
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+        {galleryItems.map((item, i) => (
+          <div
+            key={i}
+            className="
+              group
+              rounded-3xl
+              overflow-hidden
+              bg-white
+              shadow-[0_20px_50px_rgba(0,0,0,0.15)]
+              hover:-translate-y-1
+              hover:shadow-[0_35px_80px_rgba(0,0,0,0.25)]
+              transition-all
+              duration-300
+            "
+          >
+            {item.type === "image" ? (
+              <img
+                src={item.src}
+                alt="Ümraniye Çanta ve Valiz Tamiri"
+                className="w-full aspect-[3/4] object-cover"
+              />
+            ) : (
+              <video
+                src={item.src}
+                muted
+                loop
+                autoPlay
+                playsInline
+                preload="metadata"
+                className="w-full aspect-[3/4] object-cover"
+              />
+            )}
           </div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
 
       {/* CONTACT */}
       <section id="iletisim" className="py-32 bg-slate-900 text-white">

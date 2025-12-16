@@ -1,6 +1,48 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+
+const InstagramIcon = () => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none">
+    <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" strokeWidth="2"/>
+    <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2"/>
+    <circle cx="17" cy="7" r="1.2" fill="currentColor"/>
+  </svg>
+);
+
+const WhatsAppIcon = () => (
+  <PhoneIcon />
+);
+
+
+const PhoneIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    className="w-5 h-5"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2
+      19.86 19.86 0 0 1-8.63-3.07
+      19.5 19.5 0 0 1-6-6
+      19.86 19.86 0 0 1-3.07-8.67
+      A2 2 0 0 1 4.11 2h3
+      a2 2 0 0 1 2 1.72
+      12.84 12.84 0 0 0 .7 2.81
+      a2 2 0 0 1-.45 2.11
+      L8.09 9.91
+      a16 16 0 0 0 6 6
+      l1.27-1.27
+      a2 2 0 0 1 2.11-.45
+      12.84 12.84 0 0 0 2.81.7
+      A2 2 0 0 1 22 16.92z"
+    />
+  </svg>
+);
+
 const NavIconHome = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
     <path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2z"
@@ -89,7 +131,6 @@ const reviews = [
 
 
 
-
 const galleryItems = [
   { type: "image", src: "/gallery/dukkan-1.jpg" },
   { type: "image", src: "/gallery/valiz-1.jpg" },
@@ -99,209 +140,133 @@ const galleryItems = [
   { type: "video", src: "/gallery/video-2.mp4" },
 ];
 
-
 export default function Home() {
   const [reviewPage, setReviewPage] = useState(0);
-const [showHeader, setShowHeader] = useState(true);
-const lastScrollY = useRef(0);
-
-useEffect(() => {
-  const interval = setInterval(() => {
-    setReviewPage(prev => (prev === 0 ? 1 : 0));
-  }, 5000);
-
-  return () => clearInterval(interval);
-}, []);
-
+  const [showHeader, setShowHeader] = useState(true);
+  const lastScrollY = useRef(0);
+const [pageReady, setPageReady] = useState(false);
   const sliderRef = useRef<HTMLDivElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-
+  /* ---------------- REVIEWS AUTO SWITCH ---------------- */
   useEffect(() => {
-  const sections = document.querySelectorAll('.fade-section');
+    const interval = setInterval(() => {
+      setReviewPage(prev => (prev === 0 ? 1 : 0));
+    }, 5000);
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
+    return () => clearInterval(interval);
+  }, []);
+
+  /* ---------------- FADE-IN SECTIONS ---------------- */
+  useEffect(() => {
+    const sections = document.querySelectorAll('.fade-section');
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: '0px 0px -10% 0px',
+      }
+    );
+
+    sections.forEach(section => observer.observe(section));
+
+    requestAnimationFrame(() => {
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight) {
+          section.classList.add('is-visible');
         }
       });
-    },
-    {
-      threshold: 0,
-      rootMargin: '0px 0px -10% 0px',
-    }
-  );
-
-  sections.forEach(section => observer.observe(section));
-
-  // 🔥 MOBİL FAILSAFE
-  requestAnimationFrame(() => {
-    sections.forEach(section => {
-      const rect = section.getBoundingClientRect();
-      if (rect.top < window.innerHeight) {
-        section.classList.add('is-visible');
-      }
     });
+
+    return () => observer.disconnect();
+  }, []);
+
+  /* ---------------- SCROLL RESTORE FIX (KALACAK) ---------------- */
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, []);
+useEffect(() => {
+  // Loader + first paint sonrası
+  const id = requestAnimationFrame(() => {
+    lastScrollY.current = window.scrollY;
+    setPageReady(true);
   });
 
-  return () => observer.disconnect();
-}, []);
-useEffect(() => {
-  if ('scrollRestoration' in window.history) {
-    window.history.scrollRestoration = 'manual';
-  }
-
-  window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  return () => cancelAnimationFrame(id);
 }, []);
 
+  /* ---------------- SLIDER AUTO SCROLL ---------------- */
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
 
-useEffect(() => {
-  const slider = sliderRef.current;
-  if (!slider) return;
+    const CARD_COUNT = 3;
 
-  const CARD_COUNT = 3;
-  const interval = setInterval(() => {
-    const cardWidth = slider.clientWidth / CARD_COUNT;
+    const interval = setInterval(() => {
+      const cardWidth = slider.clientWidth / CARD_COUNT;
+      const next = slider.scrollLeft + cardWidth * CARD_COUNT;
 
-    const next =
-      slider.scrollLeft + cardWidth * CARD_COUNT;
+      if (next >= slider.scrollWidth - slider.clientWidth) {
+        slider.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        slider.scrollTo({ left: next, behavior: 'smooth' });
+      }
+    }, 4000);
 
-    if (next >= slider.scrollWidth - slider.clientWidth) {
-      slider.scrollTo({ left: 0, behavior: 'smooth' });
-    } else {
-      slider.scrollTo({ left: next, behavior: 'smooth' });
-    }
-  }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
-  return () => clearInterval(interval);
-}, []);
+  /* ---------------- HEADER SCROLL LOGIC (🔥 ASIL FIX) ---------------- */
+  useEffect(() => {
+  if (!pageReady) return;
 
-useEffect(() => {
+  let lastY = window.scrollY;
+
   const handleScroll = () => {
-    const currentScrollY = window.scrollY;
+    const currentY = window.scrollY;
+    const diff = currentY - lastY;
 
-    if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
-      // aşağı iniyor
-      setShowHeader(false);
-    } else {
-      // yukarı çıkıyor
+    // ⬆️ Yukarı scroll (küçük bile olsa)
+    if (diff < -5) {
       setShowHeader(true);
     }
 
-    lastScrollY.current = currentScrollY;
+    // ⬇️ Aşağı scroll (biraz anlamlıysa)
+    if (diff > 10 && currentY > 120) {
+      setShowHeader(false);
+    }
+
+    lastY = currentY;
   };
 
   window.addEventListener("scroll", handleScroll, { passive: true });
-
   return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-
+}, [pageReady]);
 
 
 
   return (
-    <main className="min-h-screen page-enter text-slate-900 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <main className="min-h-screen text-slate-900 bg-gradient-to-br from-slate-50 via-white to-slate-100">
+
+
 
 
 {/* BLUR WRAPPER */}
   <div className={`transition-all duration-300 ${menuOpen ? 'blur-md scale-[0.98]' : ''}`}></div>
-      {/* MODERN FLOATING HEADER */}
-<header
-  className={`
-    fixed top-4 left-1/2 -translate-x-1/2
-    w-[95%] max-w-7xl z-50
-    bg-white/70 backdrop-blur-2xl
-    rounded-2xl
-    shadow-[0_10px_40px_rgba(0,0,0,0.12)]
-    transition-all duration-500 ease-in-out
-    ${
-      showHeader
-        ? "translate-y-0 opacity-100"
-        : "-translate-y-[120%] opacity-0"
-    }
-    ${menuOpen ? 'blur-md opacity-70' : ''}
-  `}
->
-
-
-
-  <div className="px-6 py-4 flex items-center justify-between">
-
-    {/* LOGO */}
-    <div className="flex items-center gap-3">
-      <div className="
-        w-11 h-11 rounded-xl
-        bg-gradient-to-br from-slate-900 to-slate-700
-        flex items-center justify-center
-        shadow-lg
-      ">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-white">
-          <path d="M4 8h16l-1.5 11h-13L4 8z" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M8 8V6a4 4 0 018 0v2" stroke="currentColor" strokeWidth="1.5" />
-        </svg>
-      </div>
-
-      <span className="font-semibold tracking-wide text-slate-900 text-lg">
-        ÜmraniyeÇantaTamiri.com
-      </span>
-    </div>
-
-    {/* DESKTOP MENU */}
-    <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-  {[
-    ['Ana Sayfa', '#anasayfa', <NavIconHome />],
-    ['Hakkımızda', '#hakkimizda', <NavIconInfo />],
-    ['Hizmetler', '#hizmetler', <NavIconServices />],
-    ['Galeri', '#galeri', <NavIconGallery />],
-    ['İletişim', '#iletisim', <NavIconContact />],
-  ].map(([label, href, icon]) => (
-    <a
-      key={label as string}
-      href={href as string}
-      className="
-        group
-        flex items-center gap-1.5
-        text-slate-600
-        hover:text-slate-900
-        transition
-        relative
-        after:absolute after:left-0 after:-bottom-1
-        after:h-[2px] after:w-0
-        after:bg-slate-900
-        after:transition-all
-        hover:after:w-full
-      "
-    >
-      <span className="opacity-70 group-hover:opacity-100 transition">
-        {icon}
-      </span>
-      <span>{label}</span>
-    </a>
-  ))}
-</nav>
-
-
-    {/* MOBILE BUTTON */}
-    <button
-      onClick={() => setMenuOpen(true)}
-      className="
-        md:hidden
-        w-11 h-11
-        rounded-xl
-        bg-slate-900 text-white
-        flex items-center justify-center
-        shadow-lg
-        hover:scale-105
-        transition
-      "
-    >
-      ☰
-    </button>
-  </div>
-</header>
+      
 
 
       {/* OVERLAY */}
@@ -419,7 +384,8 @@ useEffect(() => {
       {/* HERO */}
       <section
   id="anasayfa"
-  className="pt-24 md:pt-32 pb-13 md:pb-18"
+  className="pt-28 md:pt-32 pb-13 md:pb-18"
+
 >
 
 
@@ -687,22 +653,19 @@ useEffect(() => {
           "
         >
           <div
-            className="
-              w-10 h-10 md:w-12 md:h-12
-              rounded-full
-              bg-green-500
-              flex items-center justify-center
-              text-white
-              group-hover:scale-110
-              transition
-            "
-          >
-            {/* WhatsApp Icon */}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M20 12a8 8 0 11-3-6.5" stroke="currentColor" strokeWidth="2"/>
-              <path d="M16 15c-2 1-5-2-6-4" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-          </div>
+  className="
+    w-10 h-10 md:w-12 md:h-12
+    rounded-full
+    bg-green-500
+    flex items-center justify-center
+    text-white
+    group-hover:scale-110
+    transition
+  "
+>
+  <PhoneIcon />
+</div>
+
           <span className="text-sm font-medium text-slate-900">
             WhatsApp
           </span>
@@ -1201,7 +1164,11 @@ useEffect(() => {
 
 
 
-      <footer className="relative mt-24 bg-transparent">
+      <footer
+  id="iletisim"
+  className="relative mt-24 bg-transparent"
+>
+
 
   
 
@@ -1282,71 +1249,66 @@ border border-white/40
 
           <div className="flex gap-3">
 
-            {/* INSTAGRAM */}
-            <a
-              href="https://www.instagram.com/umraniyecantatamiri/?hl=en"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                w-11 h-11
-                rounded-xl
-                bg-gradient-to-br from-pink-500 to-purple-600
-                flex items-center justify-center
-                text-white
-                shadow
-                hover:scale-110
-                transition
-              "
-              aria-label="Instagram"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" strokeWidth="2"/>
-                <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2"/>
-                <circle cx="17" cy="7" r="1.2" fill="currentColor"/>
-              </svg>
-            </a>
+  {/* INSTAGRAM */}
+  <a
+    href="https://www.instagram.com/umraniyecantatamiri/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+      w-11 h-11
+      rounded-xl
+      bg-gradient-to-br from-pink-500 to-purple-600
+      flex items-center justify-center
+      text-white
+      shadow
+      hover:scale-110
+      transition
+    "
+    aria-label="Instagram"
+  >
+    <InstagramIcon />
+  </a>
 
-            {/* WHATSAPP */}
-            <a
-              href="https://wa.me/905322451229"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="
-                w-11 h-11
-                rounded-xl
-                bg-green-500
-                flex items-center justify-center
-                text-white
-                shadow
-                hover:scale-110
-                transition
-              "
-              aria-label="WhatsApp"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M20 12a8 8 0 11-3-6.5" stroke="currentColor" strokeWidth="2"/>
-                <path d="M16 15c-2 1-5-2-6-4" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-            </a>
+  {/* WHATSAPP */}
+  <a
+    href="https://wa.me/905322451229"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+      w-11 h-11
+      rounded-xl
+      bg-green-500
+      flex items-center justify-center
+      text-white
+      shadow
+      hover:scale-110
+      transition
+    "
+    aria-label="WhatsApp"
+  >
+    <WhatsAppIcon />
+  </a>
 
-            {/* PHONE */}
-            <a
-              href="tel:+905322451229"
-              className="
-                w-11 h-11
-                rounded-xl
-                bg-slate-900
-                flex items-center justify-center
-                text-white
-                shadow
-                hover:scale-110
-                transition
-              "
-              aria-label="Telefon"
-            >
-              📞
-            </a>
-          </div>
+  {/* TELEFON */}
+  <a
+    href="tel:+905322451229"
+    className="
+      w-11 h-11
+      rounded-xl
+      bg-slate-900
+      flex items-center justify-center
+      text-white
+      shadow
+      hover:scale-110
+      transition
+    "
+    aria-label="Telefon"
+  >
+    <PhoneIcon />
+  </a>
+
+</div>
+
         </div>
       </div>
 

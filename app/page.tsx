@@ -402,7 +402,7 @@ useEffect(() => {
         Getiriyoruz
       </h1>
 
-      <p className="text-slate-600 text-lg mb-10 max-w-xl">
+      <p className="text-slate-600 text-m mb-10 max-w-xl">
         Ümraniye’de profesyonel çanta, valiz tamiri 
         Kaliteli işçilik, estetik dokunuş ve güvenilir hizmet.
       </p>
@@ -842,8 +842,8 @@ useEffect(() => {
       <div className="flex justify-center mb-4 md:mb-6">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white shadow">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-          <span className="text-yellow-400">★★★★★</span>
-          <span className="font-semibold text-slate-700">4.7</span>
+          <span className="text-yellow-400">★★★★☆</span>
+          <span className="font-semibold text-slate-700">4.1</span>
           <span className="text-slate-400">Google’dan</span>
         </div>
       </div>
@@ -1014,7 +1014,7 @@ useEffect(() => {
         Hizmetlerimiz
       </h2>
       <p className="text-slate-600 text-sm">
-        Çanta, valiz ve deri ürünleriniz için sunduğumuz hizmetler
+        Çanta ve valiz için sunduğumuz hizmetler
       </p>
     </div>
 
@@ -1242,6 +1242,9 @@ border border-white/40
             <li>
               🕒 09:00 – 19:00
             </li>
+            <li>
+              📅 Pazar günü kapalıyız.
+            </li>
           </ul>
         </div>
 
@@ -1321,8 +1324,9 @@ border border-white/40
 
       {/* COPYRIGHT */}
       <div className="text-center text-sm text-slate-500">
-        © {new Date().getFullYear()} Ümraniye Çanta Tamiri • Tüm Hakları Saklıdır
+        © {new Date().getFullYear()} ÜmraniyeÇantaTamiri.com • Tüm Hakları Saklıdır
       </div>
+      
     </div>
   </div>
 </footer>

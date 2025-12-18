@@ -21,10 +21,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ümraniye Çanta Tamiri",
-  description:
-    "Ümraniye’de profesyonel çanta, valiz ve deri ürün tamiri. Kaliteli işçilik ve güvenilir hizmet.",
+  title: "ÜmraniyeÇantaTamiri.com",
+  description: "Ümraniye’de profesyonel çanta, valiz ve deri ürün tamiri. Kaliteli işçilik ve güvenilir hizmet.",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
+
 
 export default function RootLayout({
   children,

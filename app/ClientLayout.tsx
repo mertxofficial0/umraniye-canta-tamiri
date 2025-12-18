@@ -91,7 +91,7 @@ function PageLoader({ visible }: { visible: boolean }) {
   return (
     <div className={`fixed inset-0 z-[9999] flex items-center justify-center
       bg-gradient-to-br from-slate-50 via-white to-slate-100
-      transition-all duration-500
+      transition-all duration-300
       ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
       <div className="w-14 h-14 rounded-full border-[3px] border-slate-300 border-t-slate-900 animate-spin" />
     </div>
@@ -106,16 +106,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const done = () => {
-      setTimeout(() => {
-        lastScrollY.current = window.scrollY;
-        setLoading(false);
-      }, 400);
-    };
-    if (document.readyState === "complete") done();
-    else window.addEventListener("load", done);
-    return () => window.removeEventListener("load", done);
-  }, []);
+  const id = requestAnimationFrame(() => {
+    lastScrollY.current = window.scrollY;
+    setLoading(false);
+  });
+
+  return () => cancelAnimationFrame(id);
+}, []);
+
 
   useEffect(() => {
     if (loading) return;
@@ -241,24 +239,44 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
           </div>
 
-          <nav className="flex flex-col gap-3 text-slate-900">
+          <nav className="flex flex-col gap-3">
 
-            {['Ana Sayfa','#anasayfa','Hakkımızda','#hakkimizda','Hizmetler','#hizmetler','Galeri','#galeri','İletişim','#iletisim']
-              .reduce((a,_,i,arr)=> i%2?a:a.concat([[arr[i],arr[i+1]]]),[] as any[])
-              .map(([label,href])=>(
-              <a key={label} href={href} onClick={()=>setMenuOpen(false)}
-                className="
-  px-5 py-4
-  rounded-2xl
-  bg-white
-  shadow
-  text-slate-900
-"
->
-                {label}
-              </a>
-            ))}
-          </nav>
+  {[
+    { label: "Ana Sayfa", href: "#anasayfa", icon: <NavIconHome /> },
+    { label: "Hakkımızda", href: "#hakkimizda", icon: <NavIconInfo /> },
+    { label: "Hizmetler", href: "#hizmetler", icon: <NavIconServices /> },
+    { label: "Galeri", href: "#galeri", icon: <NavIconGallery /> },
+    { label: "İletişim", href: "#iletisim", icon: <NavIconContact /> },
+  ].map(item => (
+    <a
+      key={item.label}
+      href={item.href}
+      onClick={() => setMenuOpen(false)}
+      className="
+        flex items-center gap-4
+        px-5 py-4
+        rounded-2xl
+        bg-white
+        shadow
+        text-slate-900
+        text-base
+        hover:bg-slate-900
+        hover:text-white
+        transition
+      "
+    >
+      <span className="opacity-80">
+        {item.icon}
+      </span>
+
+      <span className="font-medium">
+        {item.label}
+      </span>
+    </a>
+  ))}
+
+</nav>
+
 
           {/* SOCIAL ICONS */}
           <div className="mt-auto pt-8 flex justify-center gap-4">

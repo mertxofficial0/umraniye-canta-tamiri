@@ -314,9 +314,7 @@ useEffect(() => {
           </svg>
         </div>
 
-        <span className="font-semibold text-slate-900">
-          Menü
-        </span>
+        
       </div>
 
       <button

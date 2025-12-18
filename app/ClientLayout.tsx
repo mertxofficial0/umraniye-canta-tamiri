@@ -220,7 +220,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           ${menuOpen ? "translate-x-0" : "translate-x-full"}`}>
 
           <div className="flex justify-between items-center mb-6">
-            <span className="font-semibold">Menü</span>
+            
             <button
   onClick={() => setMenuOpen(false)}
   className="

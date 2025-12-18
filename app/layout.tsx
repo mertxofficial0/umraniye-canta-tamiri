@@ -21,12 +21,34 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ÜmraniyeÇantaTamiri.com",
-  description: "Ümraniye’de profesyonel çanta, valiz ve deri ürün tamiri. Kaliteli işçilik ve güvenilir hizmet.",
+  title: "Ümraniye Çanta Tamiri | Çanta & Valiz Tamiri",
+  description:
+    "Ümraniye çanta tamiri hizmeti. Valiz tamiri, fermuar değişimi, deri çanta onarımı. Atatürk Mahallesi Ümraniye / İstanbul.",
+
+  keywords: [
+    "Ümraniye çanta tamiri",
+    "Ümraniye valiz tamiri",
+    "çanta tamircisi Ümraniye",
+    "valiz tamircisi Ümraniye",
+    "deri çanta tamiri",
+    "fermuar değişimi"
+  ],
+
+  openGraph: {
+    title: "Ümraniye Çanta Tamiri",
+    description:
+      "Ümraniye’de profesyonel çanta ve valiz tamiri. Hızlı, güvenilir ve kaliteli hizmet.",
+    url: "https://umraniyecantatamiri.com",
+    siteName: "Ümraniye Çanta Tamiri",
+    locale: "tr_TR",
+    type: "website",
+  },
+
   icons: {
     icon: "/favicon.png",
   },
 };
+
 
 
 export default function RootLayout({

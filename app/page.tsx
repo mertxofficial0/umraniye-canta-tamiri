@@ -386,6 +386,9 @@ useEffect(() => {
   className="pt-28 md:pt-32 pb-13 md:pb-18"
 
 >
+<p className="sr-only">
+  Ümraniye çanta tamiri, valiz tamiri, deri çanta onarımı ve fermuar değişimi hizmetleri.
+</p>
 
 
 
@@ -1330,6 +1333,26 @@ border border-white/40
     </div>
   </div>
 </footer>
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Ümraniye Çanta Tamiri",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Atatürk Mahallesi Morgül Sk. No:4",
+        "addressLocality": "Ümraniye",
+        "addressRegion": "İstanbul",
+        "postalCode": "34764",
+        "addressCountry": "TR"
+      },
+      "telephone": "+905322451229",
+      "url": "https://umraniyecantatamiri.com"
+    })
+  }}
+/>
 
 
     </main>

@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ümraniye Çanta Tamiri | Çanta & Valiz Tamiri",
+  title: "ÜmraniyeÇantaTamiri.com ",
   description:
     "Ümraniye çanta tamiri hizmeti. Valiz tamiri, fermuar değişimi, deri çanta onarımı. Atatürk Mahallesi Ümraniye / İstanbul.",
 
